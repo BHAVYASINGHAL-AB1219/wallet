@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const express = require("express");
 const schema = require("./db");
 
+console.log("adding these files to github")
 
 const app = express();
 app.use(express.json())
