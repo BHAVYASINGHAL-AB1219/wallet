@@ -1,0 +1,85 @@
+const { Router } = require("express");
+const {z} = require("zod");
+const bcrypt = require("bcrypt")
+const UserRouter = Router();
+const { UsersModel } = require("../db")
+const { UserMiddleware } = require("../middlewares/user");
+const JWT_USER = process.env.JWT_USER
+const jwt = require("jsonwebtoken")
+
+
+
+
+UserRouter.post("/signup",async function(req,res){
+    const { email, password, name} = req.body;
+
+    const signupschema = z.object({
+        email: z.string().email(),
+        password: z.string().refine((val) => /[a-z]/.test(val) && /[A-Z]/.test(val), {
+            message: "password should contain altleat one uppercase and one lowercase letter"
+        }),
+        name: z.string()
+    })
+
+    const isdatasafe =  signupschema.safeParse(req.body);
+    //console.log(isdatasafe.error.message);
+    if(isdatasafe.success){
+        const hashedpassword = await bcrypt.hash(password,5);
+        await UsersModel.create({
+            email,
+            hashedpassword,
+            name
+        })
+        res.status(200).json({
+            message: "Signup succeded!"
+        })
+    }else{
+        res.status(403).json({
+            error: isdatasafe.error
+        })
+    }
+})
+
+UserRouter.post("/signin",async function(req,res){
+    const { email, password } = req.body;
+    
+    
+    const signinschema = z.object({
+        email: z.string().email(),
+        password: z.string().min(6, {message: "password minimum length should be six"}).refine((val) => /[a-z]/.test(val) && /[A-Z]/.test(val), {
+            message: "password must contain atleast one Lowercase and Uppercase letter"
+        })
+    }) 
+
+    const isdatasafe = signinschema.safeParse(req.body);
+
+    if(isdatasafe.success){
+        const user = await UsersModel.findOne({
+            email: email,
+        })
+        if(user){
+            const passwordmatch = await bcrypt.compare(password,user.hashedpassword);
+
+            if(passwordmatch){
+                const token = jwt.sign({
+                    id: user._id.toString()
+                },JWT_USER)
+                res.status(200).json({
+                    message: "signin successful",
+                    token: token
+                })
+            }else{
+                res.status(403).send("Invalid password!")
+            }
+        }else{
+            res.status(403).send("Invalid Username!")
+        }
+    }else{
+        res.status(403).json(isdatasafe.error)
+    }
+})
+
+
+module.exports = {
+    UserRouter
+}
