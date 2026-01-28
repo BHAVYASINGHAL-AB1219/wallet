@@ -6,6 +6,8 @@ const ObjectId = mongoose.Types.ObjectId;
 
 
 
+
+
 const users = new mongoose.Schema({
     email: {type: String, unique: true},
     hashedpassword: String,
@@ -40,18 +42,26 @@ const categories = new mongoose.Schema({
     categoryName: String
 })
 
+const credit = new mongoose.Schema({
+    UserId: ObjectId,
+    amount: Number,
+    createdAt: Date
+})
+
 const UsersModel = mongoose.model('users',users);
 const ExpensesModel = mongoose.model('expenses',expenses);
 const IncomesModel = mongoose.model('incomes',incomes);
 const BudgetModel = mongoose.model('budget',budget);
 const categoriesModel = mongoose.model('categories',categories);
+const creditModel = mongoose.model('credits',credit);
 
 module.exports = {
     UsersModel,
     ExpensesModel,
     IncomesModel,
     BudgetModel,
-    categoriesModel
+    categoriesModel,
+    creditModel
 }
 
 
