@@ -27,7 +27,7 @@ async function main(){
 }
 main()
 
-cron.schedule('58 0 29 1 *', () => {
+cron.schedule('0 0 1 * *', () => {
 
     async function main() {
         console.log("function started")
