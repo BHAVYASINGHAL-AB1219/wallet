@@ -60,7 +60,7 @@ cron.schedule('0 0 1 * *', () => {
             })
             if (currentmonth != 0) {
                 allexpenses = allexpenses.filter(expense => (expense.createdAt.getMonth() === currentmonth - 1) && (expense.createdAt.getFullYear() === currentyear))
-            }else{
+            } else {
                 allexpenses = allexpenses.filter(expense => expense.createdAt.getMonth() == 12 && expense.createdAt.getFullYear() == currentyear - 1);
             }
 
@@ -76,6 +76,11 @@ cron.schedule('0 0 1 * *', () => {
             await creditModel.create({
                 UserId: UserId,
                 amount: credit,
+                createdAt: new Date()
+            })
+            await BudgetModel.upadateOne({
+                UserId: UserId
+            }, {
                 createdAt: new Date()
             })
         }

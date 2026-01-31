@@ -15,9 +15,10 @@ BudgetRouter.post("/setbudget", UserMiddleware, async function (req, res) {
     const categoryobj = await categoriesModel.findOne({
         categoryName: category
     });
+    
 
     const categoryId = categoryobj._id
-    console.log(categoryId)
+    
     const budgetexists = await BudgetModel.findOne({
         UserId: UserId.id
     })
@@ -25,9 +26,9 @@ BudgetRouter.post("/setbudget", UserMiddleware, async function (req, res) {
 
     if (budgetexists) {
         const budgetarr = budgetexists.budget;
-        console.log(budgetarr)
+        //console.log(budgetarr)
         const categoryexists = await budgetarr.filter(val => val.categoryId.toString() === categoryId.toString())
-        console.log(categoryexists)
+        //console.log(categoryexists)
         if (categoryexists.length == 0) {
             budgetarr.push({
                 categoryId: categoryId,
@@ -37,7 +38,8 @@ BudgetRouter.post("/setbudget", UserMiddleware, async function (req, res) {
             const updatedbudget = await BudgetModel.updateOne({
                 UserId: UserId.id
             }, {
-                budget: budgetarr
+                budget: budgetarr,
+                createdAt: new Date()
             })
             flag = 0;
         }
@@ -52,7 +54,6 @@ BudgetRouter.post("/setbudget", UserMiddleware, async function (req, res) {
         })
         flag = 1;
     }
-
     if (flag == 0) {
         res.status(200).json({
             message: `Budget updated of category ${category}`
@@ -89,7 +90,10 @@ BudgetRouter.put("/editbudget", UserMiddleware , async function(req,res){
     }
 
     const updatedbudget = await BudgetModel.updateOne({
-        budget: budgetarr
+       UserId: UserId.id
+    },{
+        budget: budgetarr,
+        createdAt: new Date()
     })
 
     if(updatedbudget.matchedCount == 1){res.status(200).json({
