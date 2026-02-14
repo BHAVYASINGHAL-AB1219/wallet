@@ -31,15 +31,26 @@ IncomeRouter.get("/allincomes",UserMiddleware,async function(req,res){
         UserId: UserId.id
     })
 
+    let totalincome = 0;
+
+    if(allincomes.length > 0){
+        for(let i = 0; i < allincomes.length; i++){
+            totalincome += allincomes[i].amount;
+        }
+    }
+
     if(allincomes.length > 0){
         res.status(200).json({
             message: `Income logs with userid: ${UserId}`,
-            incomes: allincomes
+            incomes: allincomes,
+            totalincome: totalincome
         })
     }else{
         res.status(404).send(`No income logs found with UserId: ${UserId}`)
     }
 })
+
+
 
 IncomeRouter.put("/changeincome",UserMiddleware,async function(req,res){
     const UserId = req.UserId;

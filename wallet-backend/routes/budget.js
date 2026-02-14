@@ -103,6 +103,55 @@ BudgetRouter.put("/editbudget", UserMiddleware , async function(req,res){
     }
 })
 
+BudgetRouter.get("/totalbudget", UserMiddleware, async function(req,res){
+    const UserId = req.UserId;
+
+    
+
+    const budgetobj = await BudgetModel.findOne({
+        UserId: UserId.id
+    })
+    //console.log(budgetobj)
+
+    let totalbudget = 0;
+    for(let i = 0; i < budgetobj.budget.length; i++){
+        totalbudget += budgetobj.budget[i].amount;
+    }
+
+    res.status(200).json({
+        totalbudgetamount: totalbudget
+    })
+})
+
+BudgetRouter.post("/catbudget", UserMiddleware, async function(req,res){
+    const UserId = req.UserId;
+
+    const categoryName = req.body.category;
+    
+
+    const userbudget = await BudgetModel.findOne({
+        UserId: UserId.id
+    })
+
+    const categoryid = await categoriesModel.findOne({
+        categoryName: categoryName
+    })
+
+    console.log(categoryid._id)
+    let budgetamount = 0;
+
+    for(let i = 0; i < userbudget.budget.length; i++){
+        if(userbudget.budget[i].categoryId.toString() == categoryid._id.toString()){
+            budgetamount = userbudget.budget[i].amount;
+            break;
+        }
+    }
+
+    res.status(200).json({
+        catbudget: budgetamount
+    })
+})
+
 module.exports = {
     BudgetRouter
 }

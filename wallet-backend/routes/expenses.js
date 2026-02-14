@@ -36,14 +36,20 @@ ExpensesRouter.get("/allexpenses", UserMiddleware, async function (req, res) {
         UserId: UserId.id
     })
 
+    let totalexpense = 0;
+    for(let i = 0; i < allexpenses.length; i++){
+        totalexpense += allexpenses[i].amount;
+    }
+
     res.status(200).json({
         allexpenses: allexpenses,
         message: `all expenses with user ${UserId}`,
+        totalexpense: totalexpense
     })
 })
 
 
-ExpensesRouter.get("/catexpenses", UserMiddleware, async function (req, res) {
+ExpensesRouter.post("/catexpenses", UserMiddleware, async function (req, res) {
     const UserId = req.UserId;
 
     const category = req.body.category;
@@ -57,10 +63,16 @@ ExpensesRouter.get("/catexpenses", UserMiddleware, async function (req, res) {
         UserId: UserId.id,
         category: categoryobj._id
     })
+
+    let totalexpense = 0;
+    for(let i = 0; i < allexpenses.length; i++){
+        totalexpense += allexpenses[i].amount;
+    }
     if (allexpenses.length >= 1) {
         res.status(200).json({
             message: `all expenses with category ${category}`,
-            expenses: allexpenses
+            expenses: allexpenses,
+            totalexpense: totalexpense
         })
     } else {
         res.status(404).send(`No expense of category: ${category} found`)

@@ -1,0 +1,91 @@
+/* Main Header Container */
+.header {
+    background-color: #ffffff;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    padding: 1.25rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Logo Styling */
+.logo {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #2563eb;
+    /* Stronger blue */
+    text-decoration: none;
+    letter-spacing: -0.025em;
+    transition: color 0.2s ease;
+}
+
+.logo:hover {
+    color: #1d4ed8;
+}
+
+/* Navigation Links Container */
+.nav-links {
+    display: flex;
+    gap: 2.5rem;
+    align-items: center;
+}
+
+/* Individual Link Styling */
+.nav-link {
+    text-decoration: none;
+    color: #4b5563;
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 0.5rem 0;
+    position: relative;
+    transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+    color: #2563eb;
+}
+
+/* Underline Animation */
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: #2563eb;
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* Logout Button */
+.logout-btn {
+    padding: 0.625rem 1.5rem;
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 9999px;
+    /* Pill shape */
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+}
+
+.logout-btn:hover {
+    background-color: #dc2626;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(239, 68, 68, 0.3);
+}
+
+.logout-btn:active {
+    transform: translateY(0);
+}

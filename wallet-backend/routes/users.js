@@ -69,10 +69,14 @@ UserRouter.post("/signin",async function(req,res){
                     token: token
                 })
             }else{
-                res.status(403).send("Invalid password!")
+                res.status(403).json({
+                    message: "Invalid Password!"
+                })
             }
         }else{
-            res.status(403).send("Invalid Username!")
+            res.status(403).json({
+                message: "Invalid Username!"
+            })
         }
     }else{
         res.status(403).json(isdatasafe.error)

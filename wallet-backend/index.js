@@ -2,12 +2,17 @@ require('dotenv').config()
 const mongoose = require("mongoose");
 const express = require("express");
 const schema = require("./db");
+const cors = require("cors");
 const { creditModel, BudgetModel, ExpensesModel, UsersModel } = require('./db');
 const cron = require('node-cron');
 
 
 
+
 const app = express();
+app.use(cors({
+    domain: ["http://localhost:5173", "http://172.16.33.193:5173"]
+}))
 app.use(express.json())
 
 const { UserRouter } = require("./routes/users")
