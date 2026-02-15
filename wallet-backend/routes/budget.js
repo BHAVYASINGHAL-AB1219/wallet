@@ -113,14 +113,19 @@ BudgetRouter.get("/totalbudget", UserMiddleware, async function(req,res){
     })
     //console.log(budgetobj)
 
-    let totalbudget = 0;
+    if(budgetobj)
+    {let totalbudget = 0;
     for(let i = 0; i < budgetobj.budget.length; i++){
         totalbudget += budgetobj.budget[i].amount;
     }
 
     res.status(200).json({
         totalbudgetamount: totalbudget
-    })
+    })}else{
+        res.status(200).json({
+            message: "data not found!"
+        })
+    }
 })
 
 BudgetRouter.post("/catbudget", UserMiddleware, async function(req,res){

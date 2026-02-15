@@ -1,5 +1,5 @@
 import React , {useState} from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios'
 import './Signup.css';
 
@@ -10,6 +10,7 @@ function Signup() {
     const [error, setError] = useState('')
     const [success, setSuccess] = useState('')
 
+    const navigate = useNavigate();
     const handlesignup = async(e) => {
         e.preventDefault();
         setError('');
@@ -22,6 +23,7 @@ function Signup() {
         })
         console.log(response);
         setSuccess(response.data.message)
+        navigate("/signin")
     }catch (e){
             console.log(e)
             console.log(e.response.data.message);

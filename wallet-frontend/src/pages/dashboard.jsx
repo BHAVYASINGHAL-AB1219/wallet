@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios'
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import './dashboard.css'; // Assuming you might want to add specific dashboard styles later
+import './dashboard.css';
 import { data } from 'react-router-dom';
 
 function Dashboard() {
@@ -10,7 +10,31 @@ function Dashboard() {
     const [totalincome, setTotalincome] = useState(0);
     const [totalbudget, setTotalbudget] = useState(0);
     const [totalexpense, setTotalexpense] = useState(0);
-    const [categories, setCategories] = useState([]); // State for dynamic categories
+    const [categories, setCategories] = useState([]);
+    const [showExpenseForm, setShowExpenseForm] = useState(false);
+    const [expamount, setExpamount] = useState(0);
+    const [expdescription, setExpensedesc] = useState('');
+    const [expcategory, setexpcategory] = useState('');
+
+
+    const [showIncomeForm, setShowIncomeForm] = useState(false);
+    const [incAmount, setIncAmount] = useState(0);
+    const [incDescription, setIncDescription] = useState('');
+
+    const addexpense = async (e) => {
+        const token = localStorage.getItem('token');
+        const response = await axios.post("http://172.16.33.193:3000/expenses/addexpense", {
+            category: expcategory,
+            amount: expamount,
+            description: expdescription
+        }, {
+            headers: {
+                token: token
+            }
+        })
+        console.log(response)
+    }
+
 
     useEffect(() => {
         const fetchingtotalincome = async () => {
@@ -67,49 +91,154 @@ function Dashboard() {
             const allcategories = await axios.get("http://172.16.33.193:3000/category/allcategories");
             let allcategoryobj = [];
             let categorynames = allcategories.data.categories;
-            //console.log(categorynames);
-            
-            for(let i = 0; i < categorynames.length; i++){
-                let categoryobj = {};
-                let categoryexpense = await axios.post("http://172.16.33.193:3000/expenses/catexpenses", 
-                    {
-                        category: categorynames[i]
-                    },
-                    {headers: {
-                        token: token
-                    }}
-                    
-                )
-                categoryobj.name = categorynames[i];
-                categoryobj.spent = categoryexpense.data.totalexpense;
+            console.log(categorynames);
 
-                let catbudget = await axios.post("http://172.16.33.193:3000/budget/catbudget",
-                    {
+            for (let i = 0; i < categorynames.length; i++) {
+                let categoryobj = {};
+                categoryobj.name = categorynames[i]; 
+                categoryobj.spent = 0; 
+                categoryobj.budget = 0; 
+
+                try {
+                    let categoryexpense = await axios.post("http://172.16.33.193:3000/expenses/catexpenses", {
                         category: categorynames[i]
-                    },
-                    {
+                    }, {
                         headers: {
                             token: token
                         }
-                    }
-                )
-                console.log(catbudget)
-                categoryobj.budget = catbudget.data.catbudget;
-                //console.log(categoryobj);
+                    });
+                    categoryobj.spent = categoryexpense.data.totalexpense;
+                } catch (err) {
+                    console.log(`Error fetching expenses for ${categorynames[i]}:`, err);
+                }
+
+                try {
+                    let catbudget = await axios.post("http://172.16.33.193:3000/budget/catbudget", {
+                        category: categorynames[i]
+                    }, {
+                        headers: {
+                            token: token
+                        }
+                    });
+                    categoryobj.budget = catbudget.data.catbudget;
+                } catch (err) {
+                    console.log(`Error fetching budget for ${categorynames[i]}:`, err);
+                }
+
                 allcategoryobj.push(categoryobj);
             }
+
             //console.log(allcategoryobj);
             setCategories(allcategoryobj)
-        } 
+        }
+
+
 
         fetchingtotalincome();
         fetchingtotalbudget();
         fetchingtotalexpense();
         fetchingcategorywisedata();
-    }, []); // Empty dependency array ensures this runs only once on mount
+    }, []);
 
+
+
+    const addincomme = async (e) => {
+        const token = localStorage.getItem('token');
+        const response = await axios.post("http://172.16.33.193:3000/incomes/income", {
+            amount: incAmount,
+            description: incDescription
+        }, {
+            headers: {
+                token: token
+            }
+        })
+    }
     return (
         <div className="dashboard-layout">
+            {showExpenseForm && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <h3>Add New Expense</h3>
+                        <form onSubmit={addexpense}>
+                            <div className="form-group">
+                                <label>Amount</label>
+                                <input
+                                    type="number"
+                                    name="amount"
+                                    placeholder="Enter amount"
+                                    value={expamount}
+                                    onChange={(e) => setExpamount(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label>Description</label>
+                                <input
+                                    type="text"
+                                    name="description"
+                                    placeholder="Enter description"
+                                    value={expdescription}
+                                    onChange={(e) => setExpensedesc(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label>Category</label>
+                                <select
+                                    name="category"
+                                    value={expcategory}
+                                    onChange={(e) => setexpcategory(e.target.value)}
+                                    required
+                                >
+                                    <option value="">Select Category</option>
+                                    {categories.map((cat, index) => (
+                                        <option key={index} value={cat.name}>{cat.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="form-actions">
+                                <button type="button" className="btn-cancel" onClick={() => setShowExpenseForm(false)}>Cancel</button>
+                                <button type="submit" className="btn-submit">Add Expense</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+            {showIncomeForm && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <h3>Add New Income</h3>
+                        <form onSubmit={addincomme}>
+                            <div className="form-group">
+                                <label>Amount</label>
+                                <input
+                                    type="number"
+                                    name="amount"
+                                    placeholder="Enter amount"
+                                    value={incAmount}
+                                    onChange={(e) => setIncAmount(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label>Description</label>
+                                <input
+                                    type="text"
+                                    name="description"
+                                    placeholder="Enter description"
+                                    value={incDescription}
+                                    onChange={(e) => setIncDescription(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="form-actions">
+                                <button type="button" className="btn-cancel" onClick={() => setShowIncomeForm(false)}>Cancel</button>
+                                <button type="submit" className="btn-submit">Add Income</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
             <Header />
             <main className="dashboard-content">
                 <div className="summary-section">
@@ -129,9 +258,20 @@ function Dashboard() {
                     <div className="daily-limit-container">
                         <div className="daily-limit-circle">
                             <span className="daily-limit-label">Daily Limit</span>
-                            <span className="daily-limit-value">$150</span>
+                            <span className="daily-limit-value">150</span>
                         </div>
                     </div>
+                </div>
+
+                <div className="dashboard-actions">
+                    <button className="btn-action btn-income" onClick={() => setShowIncomeForm(true)}>
+                        <span className="action-icon">+</span>
+                        Add Income
+                    </button>
+                    <button className="btn-action btn-expense" onClick={() => setShowExpenseForm(true)}>
+                        <span className="action-icon">-</span>
+                        Add Expense
+                    </button>
                 </div>
 
                 <div className="category-frame">
