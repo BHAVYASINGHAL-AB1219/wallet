@@ -3,9 +3,10 @@ import axios from 'axios'
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import './dashboard.css';
-import { data } from 'react-router-dom';
+import { data, useNavigate } from 'react-router-dom';
 
 function Dashboard() {
+    const navigate = useNavigate();
 
     const [totalincome, setTotalincome] = useState(0);
     const [totalbudget, setTotalbudget] = useState(0);
@@ -23,7 +24,7 @@ function Dashboard() {
 
     const addexpense = async (e) => {
         const token = localStorage.getItem('token');
-        const response = await axios.post("http://172.16.33.193:3000/expenses/addexpense", {
+        const response = await axios.post("http://172.16.33.202:3000/expenses/addexpense", {
             category: expcategory,
             amount: expamount,
             description: expdescription
@@ -40,7 +41,7 @@ function Dashboard() {
         const fetchingtotalincome = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const allincomes = await axios.get("http://172.16.33.193:3000/incomes/allincomes", {
+                const allincomes = await axios.get("http://172.16.33.202:3000/incomes/allincomes", {
                     headers: {
                         token: token
                     }
@@ -57,7 +58,7 @@ function Dashboard() {
         const fetchingtotalbudget = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const totalbudget = await axios.get("http://172.16.33.193:3000/budget/totalbudget", {
+                const totalbudget = await axios.get("http://172.16.33.202:3000/budget/totalbudget", {
                     headers: {
                         token: token
                     }
@@ -73,13 +74,13 @@ function Dashboard() {
         const fetchingtotalexpense = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const totalexpense = await axios.get("http://172.16.33.193:3000/expenses/allexpenses", {
+                //console.log(token)
+                const totalexpense = await axios.get("http://172.16.33.202:3000/expenses/allexpenses", {
                     headers: {
                         token: token
                     }
                 })
                 const totalexpenseamount = totalexpense.data.totalexpense;
-                //console.log(totalexpenseamount);
                 setTotalexpense(totalexpenseamount);
             } catch (error) {
                 console.error("Error fetching expenses:", error);
@@ -88,19 +89,19 @@ function Dashboard() {
 
         const fetchingcategorywisedata = async () => {
             const token = localStorage.getItem('token');
-            const allcategories = await axios.get("http://172.16.33.193:3000/category/allcategories");
+            const allcategories = await axios.get("http://172.16.33.202:3000/category/allcategories");
             let allcategoryobj = [];
             let categorynames = allcategories.data.categories;
             console.log(categorynames);
 
             for (let i = 0; i < categorynames.length; i++) {
                 let categoryobj = {};
-                categoryobj.name = categorynames[i]; 
-                categoryobj.spent = 0; 
-                categoryobj.budget = 0; 
+                categoryobj.name = categorynames[i];
+                categoryobj.spent = 0;
+                categoryobj.budget = 0;
 
                 try {
-                    let categoryexpense = await axios.post("http://172.16.33.193:3000/expenses/catexpenses", {
+                    let categoryexpense = await axios.post("http://172.16.33.202:3000/expenses/catexpenses", {
                         category: categorynames[i]
                     }, {
                         headers: {
@@ -113,7 +114,7 @@ function Dashboard() {
                 }
 
                 try {
-                    let catbudget = await axios.post("http://172.16.33.193:3000/budget/catbudget", {
+                    let catbudget = await axios.post("http://172.16.33.202:3000/budget/catbudget", {
                         category: categorynames[i]
                     }, {
                         headers: {
@@ -144,7 +145,7 @@ function Dashboard() {
 
     const addincomme = async (e) => {
         const token = localStorage.getItem('token');
-        const response = await axios.post("http://172.16.33.193:3000/incomes/income", {
+        const response = await axios.post("http://172.16.33.202:3000/incomes/income", {
             amount: incAmount,
             description: incDescription
         }, {
@@ -288,7 +289,12 @@ function Dashboard() {
                                             Spent: <span>{category.spent}</span> / Budget: <span>{category.budget}</span>
                                         </div>
                                     </div>
-                                    <button className="category-action-btn">View Details</button>
+                                    <button
+                                        className="category-action-btn"
+                                        onClick={() => navigate('/viewdetails', { state: { category } })}
+                                    >
+                                        View Details
+                                    </button>
                                 </div>
                             ))
                         ) : (

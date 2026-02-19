@@ -32,10 +32,9 @@ ExpensesRouter.post("/addexpense", UserMiddleware, async function (req, res) {
 ExpensesRouter.get("/allexpenses", UserMiddleware, async function (req, res) {
     const UserId = req.UserId;
 
-    const allexpenses = await ExpensesModel.find({
+    let allexpenses = await ExpensesModel.find({
         UserId: UserId.id
-    })
-
+    });
     let totalexpense = 0;
     for(let i = 0; i < allexpenses.length; i++){
         totalexpense += allexpenses[i].amount;
@@ -75,7 +74,7 @@ ExpensesRouter.post("/catexpenses", UserMiddleware, async function (req, res) {
             totalexpense: totalexpense
         })
     } else {
-        res.status(404).send(`No expense of category: ${category} found`)
+        res.status(200).send(`No expense of category: ${category} found`)
     }
 
 })

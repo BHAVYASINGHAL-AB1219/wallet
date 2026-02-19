@@ -15,10 +15,9 @@ BudgetRouter.post("/setbudget", UserMiddleware, async function (req, res) {
     const categoryobj = await categoriesModel.findOne({
         categoryName: category
     });
-    
 
     const categoryId = categoryobj._id
-    
+
     const budgetexists = await BudgetModel.findOne({
         UserId: UserId.id
     })
@@ -66,10 +65,10 @@ BudgetRouter.post("/setbudget", UserMiddleware, async function (req, res) {
 
 })
 
-BudgetRouter.put("/editbudget", UserMiddleware , async function(req,res){
+BudgetRouter.put("/editbudget", UserMiddleware, async function (req, res) {
     const UserId = req.UserId;
 
-    const { category, amount} = req.body;
+    const { category, amount } = req.body;
 
     const categoryobj = await categoriesModel.findOne({
         categoryName: category
@@ -83,56 +82,59 @@ BudgetRouter.put("/editbudget", UserMiddleware , async function(req,res){
 
     const budgetarr = budgetexists.budget;
 
-    for(let i = 0; i < budgetarr.length; i++){
-        if(budgetarr[i].categoryId.toString() == categoryid.toString()){
+    for (let i = 0; i < budgetarr.length; i++) {
+        if (budgetarr[i].categoryId.toString() == categoryid.toString()) {
             budgetarr[i].amount = amount;
         }
     }
 
     const updatedbudget = await BudgetModel.updateOne({
-       UserId: UserId.id
-    },{
+        UserId: UserId.id
+    }, {
         budget: budgetarr,
         createdAt: new Date()
     })
 
-    if(updatedbudget.matchedCount == 1){res.status(200).json({
-        message: `Budget of category: ${category} updated`
-    })}else{
+    if (updatedbudget.matchedCount == 1) {
+        res.status(200).json({
+            message: `Budget of category: ${category} updated`
+        })
+    } else {
         res.status(404).send(`Some Error Occured, Budget not Upddated`)
     }
 })
 
-BudgetRouter.get("/totalbudget", UserMiddleware, async function(req,res){
+BudgetRouter.get("/totalbudget", UserMiddleware, async function (req, res) {
     const UserId = req.UserId;
 
-    
+
 
     const budgetobj = await BudgetModel.findOne({
         UserId: UserId.id
     })
     //console.log(budgetobj)
 
-    if(budgetobj)
-    {let totalbudget = 0;
-    for(let i = 0; i < budgetobj.budget.length; i++){
-        totalbudget += budgetobj.budget[i].amount;
-    }
+    if (budgetobj) {
+        let totalbudget = 0;
+        for (let i = 0; i < budgetobj.budget.length; i++) {
+            totalbudget += budgetobj.budget[i].amount;
+        }
 
-    res.status(200).json({
-        totalbudgetamount: totalbudget
-    })}else{
+        res.status(200).json({
+            totalbudgetamount: totalbudget
+        })
+    } else {
         res.status(200).json({
             message: "data not found!"
         })
     }
 })
 
-BudgetRouter.post("/catbudget", UserMiddleware, async function(req,res){
+BudgetRouter.post("/catbudget", UserMiddleware, async function (req, res) {
     const UserId = req.UserId;
 
     const categoryName = req.body.category;
-    
+
 
     const userbudget = await BudgetModel.findOne({
         UserId: UserId.id
@@ -145,10 +147,12 @@ BudgetRouter.post("/catbudget", UserMiddleware, async function(req,res){
     console.log(categoryid._id)
     let budgetamount = 0;
 
-    for(let i = 0; i < userbudget.budget.length; i++){
-        if(userbudget.budget[i].categoryId.toString() == categoryid._id.toString()){
-            budgetamount = userbudget.budget[i].amount;
-            break;
+    if (userbudget) {
+        for (let i = 0; i < userbudget.budget.length; i++) {
+            if (userbudget.budget[i].categoryId.toString() == categoryid._id.toString()) {
+                budgetamount = userbudget.budget[i].amount;
+                break;
+            }
         }
     }
 
