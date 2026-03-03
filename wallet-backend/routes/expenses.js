@@ -64,6 +64,8 @@ ExpensesRouter.post("/catexpenses", UserMiddleware, async function (req, res) {
         category: categoryobj._id
     })
 
+    allexpenses.reverse();
+
     const monthlyexpenses = allexpenses.filter(exp => new Date(exp.createdAt).getMonth() == currentdate.getMonth());
 
     let totalmonthexpense = 0;
