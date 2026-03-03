@@ -52,6 +52,7 @@ ExpensesRouter.post("/catexpenses", UserMiddleware, async function (req, res) {
     const UserId = req.UserId;
 
     const category = req.body.category;
+    const currentdate = new Date();
 
     const categoryobj = await categoriesModel.findOne({
         categoryName: category
@@ -63,6 +64,14 @@ ExpensesRouter.post("/catexpenses", UserMiddleware, async function (req, res) {
         category: categoryobj._id
     })
 
+    const monthlyexpenses = allexpenses.filter(exp => new Date(exp.createdAt).getMonth() == currentdate.getMonth());
+
+    let totalmonthexpense = 0;
+
+    for(let i = 0; i < monthlyexpenses.length; i++){
+        totalmonthexpense += monthlyexpenses[i].amount;
+    }
+
     let totalexpense = 0;
     for(let i = 0; i < allexpenses.length; i++){
         totalexpense += allexpenses[i].amount;
@@ -71,6 +80,8 @@ ExpensesRouter.post("/catexpenses", UserMiddleware, async function (req, res) {
         res.status(200).json({
             message: `all expenses with category ${category}`,
             expenses: allexpenses,
+            monthlyexpenses: monthlyexpenses,
+            totalmonthexpense: totalmonthexpense,
             totalexpense: totalexpense
         })
     } else {

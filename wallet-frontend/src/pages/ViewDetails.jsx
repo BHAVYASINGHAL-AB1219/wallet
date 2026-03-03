@@ -8,6 +8,8 @@ import './ViewDetails.css';
 function ViewDetails() {
     const navigate = useNavigate();
     const location = useLocation();
+    const date = new Date();
+    const monthname = date.toLocaleString('default', {month: 'long'});
 
     // Mock data for design purposes - user will implement logic later
     const categoryName = location.state?.category?.name || "Category Name";
@@ -23,10 +25,11 @@ function ViewDetails() {
 
     const [Expenses, setExpenses] = useState([]);
     const [totalexpense, setTotalexpense] = useState(0);
+    const [monthlyexpense, setMonthlyexpense] = useState(0);
 
     const fetchallexpenses = async (e) => {
         const token = localStorage.getItem('token');
-        const allexpenses = await axios.post("http://172.16.33.202:3000/expenses/catexpenses", {
+        const allexpenses = await axios.post("http://172.16.34.119:3000/expenses/catexpenses", {
             category: categoryName
         },{
             headers: {
@@ -37,6 +40,7 @@ function ViewDetails() {
         console.log(allexpenses.data);
         setExpenses(allexpenses.data.expenses);
         setTotalexpense(allexpenses.data.totalexpense);
+        setMonthlyexpense(allexpenses.data.totalmonthexpense);
 
     }
     useEffect(() => {
@@ -63,8 +67,8 @@ function ViewDetails() {
                         <span className="card-value">{totalexpense.toFixed(2)}</span>
                     </div>
                     <div className="details-card transactions-count">
-                        <span className="card-label">Transactions</span>
-                        <span className="card-value">{Expenses.length}</span>
+                        <span className="card-label">{monthname} spendings</span>
+                        <span className="card-value">{monthlyexpense}</span>
                     </div>
                 </div>
 
@@ -82,7 +86,7 @@ function ViewDetails() {
                             <tbody>
                                 {Expenses.map((expense) => (
                                     <tr key={expense._id}>
-                                        <td className="date-col">{expense.createdAt}</td>
+                                        <td className="date-col">{new Date(expense.createdAt).toLocaleDateString()}</td>
                                         <td className="desc-col">{expense.description}</td>
                                         <td className="amount-col">{expense.amount.toFixed(2)}</td>
                                     </tr>
