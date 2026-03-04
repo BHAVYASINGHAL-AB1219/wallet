@@ -6,6 +6,7 @@ import './dashboard.css';
 import { data, useNavigate } from 'react-router-dom';
 
 function Dashboard() {
+    const currentdate = new Date();
     const navigate = useNavigate();
 
     const [totalincome, setTotalincome] = useState(0);
@@ -47,7 +48,7 @@ function Dashboard() {
                     }
                 });
                 //console.log(allincomes)
-                const sumofallincomes = allincomes.data.totalincome
+                const sumofallincomes = allincomes.data.monthincome;
                 //console.log(sumofallincomes);
                 setTotalincome(sumofallincomes)
             } catch (error) {
@@ -80,7 +81,7 @@ function Dashboard() {
                         token: token
                     }
                 })
-                const totalexpenseamount = totalexpense.data.totalexpense;
+                const totalexpenseamount = totalexpense.data.monthlytotalexpense;
                 setTotalexpense(totalexpenseamount);
             } catch (error) {
                 console.error("Error fetching expenses:", error);
@@ -244,15 +245,15 @@ function Dashboard() {
             <main className="dashboard-content">
                 <div className="summary-section">
                     <div className="summary-card income">
-                        <span className="summary-title">Total Income</span>
+                        <span className="summary-title">Total {currentdate.toLocaleString('en-IN', {month: 'long'})} Income</span>
                         <span className="summary-amount">{totalincome}</span>
                     </div>
                     <div className="summary-card budget">
-                        <span className="summary-title">Total Budget</span>
+                        <span className="summary-title">Total {currentdate.toLocaleString('en-IN', {month: 'long'})} Budget</span>
                         <span className="summary-amount">{totalbudget}</span>
                     </div>
                     <div className="summary-card expenses">
-                        <span className="summary-title">Total Expenses</span>
+                        <span className="summary-title">Total {currentdate.toLocaleString('en-IN', {month: 'long'})} Expenses</span>
                         <span className="summary-amount">{totalexpense}</span>
                     </div>
 

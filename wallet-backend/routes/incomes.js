@@ -26,24 +26,35 @@ IncomeRouter.post("/income",UserMiddleware,async function(req,res){
 
 IncomeRouter.get("/allincomes",UserMiddleware,async function(req,res){
     const UserId = req.UserId;
+    const currentdate = new Date();
 
     const allincomes = await IncomesModel.find({
         UserId: UserId.id
     })
 
     let totalincome = 0;
+    let monthincome = 0;
+
+    let monthincomes = allincomes.filter(income => new Date(income.createdAt).getMonth() == currentdate.getMonth());
 
     if(allincomes.length > 0){
         for(let i = 0; i < allincomes.length; i++){
             totalincome += allincomes[i].amount;
         }
+        for(let i = 0; i < monthincomes.length; i++){
+            monthincome += monthincomes[i].amount;
+        }
     }
+
+
 
     if(allincomes.length > 0){
         res.status(200).json({
             message: `Income logs with userid: ${UserId}`,
             incomes: allincomes,
-            totalincome: totalincome
+            totalincome: totalincome,
+            monthincomes: monthincomes,
+            monthincome: monthincome
         })
     }else{
         res.status(404).send(`No income logs found with UserId: ${UserId}`)

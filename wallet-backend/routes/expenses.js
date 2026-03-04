@@ -32,18 +32,28 @@ ExpensesRouter.post("/addexpense", UserMiddleware, async function (req, res) {
 ExpensesRouter.get("/allexpenses", UserMiddleware, async function (req, res) {
     const UserId = req.UserId;
 
+    const currentdate = new Date();
+
     let allexpenses = await ExpensesModel.find({
         UserId: UserId.id
     });
+
+    const monthlyexpenses = allexpenses.filter(expense => new Date(expense.createdAt).getMonth() == currentdate.getMonth());
     let totalexpense = 0;
+    let monthlytotalexpense = 0;
     for(let i = 0; i < allexpenses.length; i++){
         totalexpense += allexpenses[i].amount;
+    }
+    for(let i = 0; i < monthlyexpenses.length; i++){
+        monthlytotalexpense += monthlyexpenses[i].amount;
     }
 
     res.status(200).json({
         allexpenses: allexpenses,
         message: `all expenses with user ${UserId}`,
-        totalexpense: totalexpense
+        totalexpense: totalexpense,
+        monthlytotalexpense: monthlytotalexpense,
+        monthlyexpenses: monthlyexpenses
     })
 })
 
