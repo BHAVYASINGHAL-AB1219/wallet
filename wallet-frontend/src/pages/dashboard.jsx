@@ -17,6 +17,7 @@ function Dashboard() {
     const [expamount, setExpamount] = useState(0);
     const [expdescription, setExpensedesc] = useState('');
     const [expcategory, setexpcategory] = useState('');
+    const [dailylimit, setDailylimit] = useState(0);
 
 
     const [showIncomeForm, setShowIncomeForm] = useState(false);
@@ -134,12 +135,25 @@ function Dashboard() {
             setCategories(allcategoryobj)
         }
 
+        const fetchingdailylimit = async () => {
+            const token = localStorage.getItem('token');
+
+            const dailyexpenselimit = await axios.post("http://172.16.34.119:3000/expenses/dailyexpense", {},{
+                headers: {
+                    token: token
+                }
+            })
+            console.log(dailyexpenselimit)
+            setDailylimit(dailyexpenselimit.data.dailylimit);
+
+        }
 
 
         fetchingtotalincome();
         fetchingtotalbudget();
         fetchingtotalexpense();
         fetchingcategorywisedata();
+        fetchingdailylimit();
     }, []);
 
 
@@ -260,7 +274,7 @@ function Dashboard() {
                     <div className="daily-limit-container">
                         <div className="daily-limit-circle">
                             <span className="daily-limit-label">Daily Limit</span>
-                            <span className="daily-limit-value">150</span>
+                            <span className="daily-limit-value">{dailylimit}</span>
                         </div>
                     </div>
                 </div>

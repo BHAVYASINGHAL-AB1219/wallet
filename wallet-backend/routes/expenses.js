@@ -3,8 +3,12 @@ const jwt = require("jsonwebtoken");
 const JWT_USER = process.env.JWT_USER;
 const ExpensesRouter = Router();
 const { UserMiddleware } = require("../middlewares/user");
-const { ExpensesModel } = require("../db");
+const { ExpensesModel, BudgetModel } = require("../db");
 const { categoriesModel } = require("../db");
+
+function getmonthdays(year, month){
+    return new Date(year, month , 0).getDate();
+}
 
 
 ExpensesRouter.post("/addexpense", UserMiddleware, async function (req, res) {
@@ -124,6 +128,60 @@ ExpensesRouter.put("/editexpense",UserMiddleware,async function(req,res){
     }else{
         res.status(404).send(`expense with expenseId: ${expenseId} not found in database`)
     }
+})
+
+ExpensesRouter.post("/dailyexpense", UserMiddleware, async function(req,res){
+
+    const currentdate = new Date();
+
+    const UserId = req.UserId.id;
+
+    const categoryobj = await categoriesModel.findOne({
+        categoryName: "Food and Drinks"
+    })
+
+    let categoryid = categoryobj._id;
+
+    const allexpenses = await ExpensesModel.find({
+        UserId: UserId,
+        category: categoryid
+    })
+
+    const allmonthlyexpenses = allexpenses.filter(expense => new Date(expense.createdAt).getMonth() == currentdate.getMonth());
+
+    let totalmonthexpense = 0;
+    for(let i = 0; i < allmonthlyexpenses.length; i++){
+        totalmonthexpense += allmonthlyexpenses[i].amount;
+    }
+
+
+    const budgetobj = await BudgetModel.findOne({
+        UserId: UserId
+    })
+
+
+    let budgetamount = 0;
+
+    for(let i = 0; i < budgetobj.budget.length; i++){
+       if(budgetobj.budget[i].categoryId.toString() === categoryid.toString()){
+        budgetamount = budgetobj.budget[i].amount;
+        break;
+       }
+    }
+
+    let remainingamount = budgetamount - totalmonthexpense;
+
+    let monthdays = getmonthdays(currentdate.getFullYear(), currentdate.getMonth() + 1);
+    console.log(monthdays)
+
+    let daysremaining = monthdays - currentdate.getDate();
+    console.log(daysremaining);
+    
+    let dailylimit = (remainingamount/daysremaining).toFixed(2);
+
+    res.status(200).json({
+        dailylimit: dailylimit
+    })
 })
 module.exports = {
     ExpensesRouter
