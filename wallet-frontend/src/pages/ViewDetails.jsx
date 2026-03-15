@@ -29,7 +29,7 @@ function ViewDetails() {
 
     const fetchallexpenses = async (e) => {
         const token = localStorage.getItem('token');
-        const allexpenses = await axios.post("http://172.16.34.119:3000/expenses/catexpenses", {
+        const allexpenses = await axios.post("http://172.16.32.204:3000/expenses/catexpenses", {
             category: categoryName
         },{
             headers: {

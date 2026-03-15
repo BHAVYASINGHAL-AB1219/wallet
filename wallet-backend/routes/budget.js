@@ -161,6 +161,46 @@ BudgetRouter.post("/catbudget", UserMiddleware, async function (req, res) {
     })
 })
 
+BudgetRouter.post("/categoryexists", UserMiddleware, async function (req, res) {
+    const UserId = req.UserId;
+
+    const { categoryName } = req.body
+
+    const categoryobj = await categoriesModel.findOne({
+        categoryName: categoryName
+    })
+    console.log(categoryobj)
+    const categoryId = categoryobj._id;
+
+
+    const budgetobj = await BudgetModel.findOne({
+        UserId: UserId.id
+    })
+
+    let categoryexists = 0;
+
+    if (!budgetobj) {
+        res.status(200).json({
+        categoryexists: categoryexists
+    })
+    }else{
+        budgetarr = budgetobj.budget;
+
+        const filteredcategory = budgetarr.filter((budget) => budget.categoryId.toString() === categoryId.toString());
+
+        if(filteredcategory.length > 0){
+            categoryexists = 1;
+        }
+    }
+
+
+    
+    res.status(200).json({
+        categoryexists: categoryexists
+    })
+
+})
+
 module.exports = {
     BudgetRouter
 }

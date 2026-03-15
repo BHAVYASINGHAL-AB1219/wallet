@@ -4,6 +4,7 @@ import SignIn from './pages/signin'
 import Signup from './pages/signup';
 import Dashboard from './pages/dashboard';
 import ViewDetails from './pages/ViewDetails';
+import Budget from './pages/budget';
 import './App.css'
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/viewdetails" element={<ViewDetails />} />
+        <Route path="/budget" element={<Budget />} />
       </Routes>
     </BrowserRouter>
   )

@@ -1,0 +1,140 @@
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
+import Header from '../components/Header'
+import Footer from '../components/Footer'
+import './budget.css'
+
+
+function Budget() {
+
+
+    const navigate = useNavigate();
+    const token = localStorage.getItem('token');
+
+    const [editrow, setEditrowId] = useState(null);
+    const [categories, setCategories] = useState([]);
+    const [budgetobj, setBudgetobj] = useState([]);
+    const [catamount, setCatamount] = useState(0);
+
+
+    useEffect(() => {
+        const fetchcategories = async () => {
+            const categoriesarr = await axios.get("http://172.16.32.204:3000/category/allcategories");
+            //console.log(categoriesarr)
+            setCategories(categoriesarr.data.categories);
+        }
+
+
+        fetchcategories();
+
+    }, [])
+
+    useEffect(() => {
+        const fetchcategorywisebudget = async () => {
+            let tempresults = [];
+            for (let i = 0; i < categories.length; i++) {
+                let amount = await axios.post("http://172.16.32.204:3000/budget/catbudget", {
+                    category: categories[i]
+                }, {
+                    headers: {
+                        token: token
+                    }
+                })
+                console.log(amount);
+                let newobj = {
+                    id: i,
+                    categoryName: categories[i],
+                    amount: amount.data.catbudget
+                }
+                tempresults.push(newobj);
+            }
+            setBudgetobj(tempresults);
+        }
+        fetchcategorywisebudget();
+    }, [categories,editrow])
+
+    const editbudget = async (id) => {
+        setEditrowId(id);
+    }
+
+    const savebudget = async (categoryname) => {
+
+        const iscategoryexists = await axios.post("http://172.16.32.204:3000/budget/categoryexists", {
+            categoryName: categoryname
+        },{
+            headers: {
+                token: token
+            }
+        })
+        console.log(iscategoryexists);
+
+        if(iscategoryexists.data.categoryexists === 1){
+            const repsonse = await axios.put("http://172.16.32.204:3000/budget/editbudget", {
+            category: categoryname,
+            amount: catamount
+        },{
+            headers: {
+                token: token
+            }
+        })
+        }else{
+            const response = await axios.post("http://172.16.32.204:3000/budget/setbudget", {
+                budget: {category: categoryname,
+                amount: catamount}
+            },{
+                headers:{
+                    token: token
+                }
+            })
+        }
+
+        
+
+        setEditrowId(null);
+    }
+
+    return (
+        <div className='budget-layout'>
+            <Header />
+            <div className='main-budget'>
+                <div className='budget-space'>
+                    <div className='budget-table-wrapper'>
+                        <table className='budget-table'>
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th>amount</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {budgetobj.map((budget) => (editrow === budget.id && (<tr key={budget.id}>
+                                    <td className='category-col'>{budget.categoryName}</td>
+                                    <td className='amount-col'>
+                                        <input className='input-amount'
+                                            type = "number"
+                                            name = "budgetamount"
+                                            value = {catamount}
+                                            onChange={(e) => setCatamount(e.target.value)}
+                                        />
+                                    </td>
+                                    <td className='edit-col'><button className='save-button' onClick={() => {savebudget(budget.categoryName)}}>Save</button></td>
+                                </tr>)))}
+                                {budgetobj.map((budget) => (editrow !== budget.id && (<tr key={budget.id}>
+                                    <td className='category-col'>{budget.categoryName}</td>
+                                    <td className='amount-col'>{budget.amount}</td>
+                                    <td className='edit-col'><button className='edit-button' onClick={() => editbudget(budget.id)}>Edit</button></td> 
+                                </tr>)))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <Footer />
+        </div>
+    );
+}
+
+export default Budget;
+

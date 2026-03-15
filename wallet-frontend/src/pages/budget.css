@@ -1,0 +1,99 @@
+.budget-layout{
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.main-budget{
+    flex: 1;
+    padding: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.budget-space{
+    background-color: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+.budget-table-wrapper{
+    overflow-x: auto;
+}
+
+.budget-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.budget-table th{
+    text-align: left;
+    padding: 1rem;
+    color: #6c757d;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.budget-table td{
+    padding: 1rem;
+    border-bottom: #f1f3f5;
+    color: #495057;
+}
+
+.budget-table tr:last-child td{
+    border-bottom: none;
+}
+
+.budget-table tr:hover{
+    background-color: #f8f9fa;
+}
+
+.category-col{
+    font-weight: 500;
+    width: 50%;
+}
+
+.amount-col{
+    display: flex;
+    align-items: center;
+    font-size: 28px;
+}
+
+.input-amount{
+    width: 60px;
+    height: 30px;
+    border-width: 3px;
+    border-radius: 15px;
+    border-color: #2563eb;
+    text-align: left;
+}
+
+.edit-button{
+    background-color: #ef4444;
+    border: none;
+    border-radius: 9999px;
+    width: 90px;
+    height: 36px;
+    color: white;
+    align-items: flex-end;
+    cursor: pointer;
+}
+
+.edit-col{
+    text-align: right;
+}
+
+.save-button{
+    background-color: #198854;
+    border: none;
+    border-radius: 9999px;
+    width: 90px;
+    height: 36px;
+    color: white;
+    cursor: pointer;
+}
