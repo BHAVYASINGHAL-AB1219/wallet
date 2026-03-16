@@ -20,7 +20,7 @@ function Budget() {
 
     useEffect(() => {
         const fetchcategories = async () => {
-            const categoriesarr = await axios.get("http://172.16.32.204:3000/category/allcategories");
+            const categoriesarr = await axios.get("http://172.16.35.64:3000/category/allcategories");
             //console.log(categoriesarr)
             setCategories(categoriesarr.data.categories);
         }
@@ -34,7 +34,7 @@ function Budget() {
         const fetchcategorywisebudget = async () => {
             let tempresults = [];
             for (let i = 0; i < categories.length; i++) {
-                let amount = await axios.post("http://172.16.32.204:3000/budget/catbudget", {
+                let amount = await axios.post("http://172.16.35.64:3000/budget/catbudget", {
                     category: categories[i]
                 }, {
                     headers: {
@@ -60,7 +60,7 @@ function Budget() {
 
     const savebudget = async (categoryname) => {
 
-        const iscategoryexists = await axios.post("http://172.16.32.204:3000/budget/categoryexists", {
+        const iscategoryexists = await axios.post("http://172.16.35.64:3000/budget/categoryexists", {
             categoryName: categoryname
         },{
             headers: {
@@ -70,7 +70,7 @@ function Budget() {
         console.log(iscategoryexists);
 
         if(iscategoryexists.data.categoryexists === 1){
-            const repsonse = await axios.put("http://172.16.32.204:3000/budget/editbudget", {
+            const repsonse = await axios.put("http://172.16.35.64:3000/budget/editbudget", {
             category: categoryname,
             amount: catamount
         },{
@@ -79,7 +79,7 @@ function Budget() {
             }
         })
         }else{
-            const response = await axios.post("http://172.16.32.204:3000/budget/setbudget", {
+            const response = await axios.post("http://172.16.35.64:3000/budget/setbudget", {
                 budget: {category: categoryname,
                 amount: catamount}
             },{
@@ -109,23 +109,20 @@ function Budget() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {budgetobj.map((budget) => (editrow === budget.id && (<tr key={budget.id}>
+                                {budgetobj.map((budget) =>  (<tr key={budget.id}>
                                     <td className='category-col'>{budget.categoryName}</td>
-                                    <td className='amount-col'>
+                                    {editrow === budget.id && (<td className='amount-col'>
                                         <input className='input-amount'
                                             type = "number"
                                             name = "budgetamount"
                                             value = {catamount}
                                             onChange={(e) => setCatamount(e.target.value)}
                                         />
-                                    </td>
-                                    <td className='edit-col'><button className='save-button' onClick={() => {savebudget(budget.categoryName)}}>Save</button></td>
-                                </tr>)))}
-                                {budgetobj.map((budget) => (editrow !== budget.id && (<tr key={budget.id}>
-                                    <td className='category-col'>{budget.categoryName}</td>
-                                    <td className='amount-col'>{budget.amount}</td>
-                                    <td className='edit-col'><button className='edit-button' onClick={() => editbudget(budget.id)}>Edit</button></td> 
-                                </tr>)))}
+                                    </td>)}
+                                    {editrow !== budget.id &&(<td className='amount-col'>{budget.amount}</td>)}
+                                    {editrow === budget.id && (<td className='edit-col'><button className='save-button' onClick={() => {savebudget(budget.categoryName)}}>Save</button></td>)}
+                                    {editrow !== budget.id && (<td className='edit-col'><button className='edit-button' onClick={() => editbudget(budget.id)}>Edit</button></td>)}
+                                </tr>))}
                             </tbody>
                         </table>
                     </div>

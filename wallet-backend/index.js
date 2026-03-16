@@ -8,10 +8,10 @@ const cron = require('node-cron');
 
 
 
-
+ 
 const app = express();
 app.use(cors({
-    domain: ["http://localhost:5173", "http://172.16.32.134:5173"]
+    domain: ["http://localhost:5173", "http://172.16.35.64:5173"]
 }))
 app.use(express.json())
 

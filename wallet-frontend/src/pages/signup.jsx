@@ -16,7 +16,7 @@ function Signup() {
         setError('');
         setSuccess('');
 
-        try {const response = await axios.post("http://172.16.32.204:3000/users/signup", {
+        try {const response = await axios.post("http://172.16.35.64:3000/users/signup", {
             name: name,
             email: email,
             password: password
