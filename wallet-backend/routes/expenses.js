@@ -147,7 +147,14 @@ ExpensesRouter.post("/dailyexpense", UserMiddleware, async function(req,res){
         category: categoryid
     })
 
-    const allmonthlyexpenses = allexpenses.filter(expense => new Date(expense.createdAt).getMonth() == currentdate.getMonth());
+    let allmonthlyexpenses = allexpenses.filter(expense => new Date(expense.createdAt).getMonth() == currentdate.getMonth());
+    allmonthlyexpenses = allmonthlyexpenses.filter(expense => new Date(expense.createdAt).getDate() != currentdate.getDate());
+    const todaysexpense = allexpenses.filter(expense => new Date(expense.createdAt).getDate() == currentdate.getDate());
+
+    let todaytotalexpense = 0;
+    for(let i = 0; i < todaysexpense.length; i++){
+        todaytotalexpense += todaysexpense[i].amount;
+    }
 
     let totalmonthexpense = 0;
     for(let i = 0; i < allmonthlyexpenses.length; i++){
@@ -178,6 +185,7 @@ ExpensesRouter.post("/dailyexpense", UserMiddleware, async function(req,res){
     console.log(daysremaining);
     
     let dailylimit = (remainingamount/daysremaining).toFixed(2);
+    dailylimit -= todaytotalexpense;
 
     res.status(200).json({
         dailylimit: dailylimit
