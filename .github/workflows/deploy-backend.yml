@@ -23,6 +23,7 @@ jobs:
         run: |
           cd wallet-backend
           npm install --production
+          npm install serverless-http
           zip -r ../backend.zip .
 
       - name: Deploy to Lambda
