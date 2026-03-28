@@ -12,7 +12,7 @@ const cron = require('node-cron');
  
 const app = express();
 app.use(cors({
-    domain: ["http://localhost:5173", "http://172.16.34.181:5173", "https://main.d1ndjhxz5ekt2.amplifyapp.com/signin"]
+    domain: ["http://localhost:5173", "http://10.21.208.55:5173", "https://main.d1ndjhxz5ekt2.amplifyapp.com/signin"]
 }))
 app.use(express.json())
 

@@ -20,7 +20,7 @@ function Budget() {
 
     useEffect(() => {
         const fetchcategories = async () => {
-            const categoriesarr = await axios.get("http://172.16.34.181:3000/category/allcategories");
+            const categoriesarr = await axios.get("http://10.21.208.55:3000/category/allcategories");
             //console.log(categoriesarr)
             setCategories(categoriesarr.data.categories);
         }
@@ -34,7 +34,7 @@ function Budget() {
         const fetchcategorywisebudget = async () => {
             let tempresults = [];
             for (let i = 0; i < categories.length; i++) {
-                let amount = await axios.post("http://172.16.34.181:3000/budget/catbudget", {
+                let amount = await axios.post("http://10.21.208.55:3000/budget/catbudget", {
                     category: categories[i]
                 }, {
                     headers: {
@@ -60,7 +60,7 @@ function Budget() {
 
     const savebudget = async (categoryname) => {
 
-        const iscategoryexists = await axios.post("http://172.16.34.181:3000/budget/categoryexists", {
+        const iscategoryexists = await axios.post("http://10.21.208.55:3000/budget/categoryexists", {
             categoryName: categoryname
         },{
             headers: {
@@ -70,7 +70,7 @@ function Budget() {
         console.log(iscategoryexists);
 
         if(iscategoryexists.data.categoryexists === 1){
-            const repsonse = await axios.put("http://172.16.34.181:3000/budget/editbudget", {
+            const repsonse = await axios.put("http://10.21.208.55:3000/budget/editbudget", {
             category: categoryname,
             amount: catamount
         },{
@@ -79,7 +79,7 @@ function Budget() {
             }
         })
         }else{
-            const response = await axios.post("http://172.16.34.181:3000/budget/setbudget", {
+            const response = await axios.post("http://10.21.208.55:3000/budget/setbudget", {
                 budget: {category: categoryname,
                 amount: catamount}
             },{

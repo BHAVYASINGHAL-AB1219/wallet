@@ -1,13 +1,32 @@
-service: wallet-api
-provider:
-  name: aws
-  runtime: nodejs20.x
-  region: ap-south-1 # Mumbai is best for you at NIT Sikkim
-  environment:
-    MONGODB_URI: ${env:MONGODB_URI} # Pulls from your .env file
+name: Deploy Backend
+on:
+  push:
+    paths:
+      - 'wallet-backend/**' # Runs only when backend code changes
+permissions:
+  id-token: write # Required for OIDC
+  contents: read
 
-functions:
-  api:
-    handler: index.handler # This matches your module.exports.handler
-    events:
-      - httpApi: '*' # Creates a single URL for all your Express routes
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ap-south-1 # Mumbai
+
+      - name: Build and Zip
+        run: |
+          cd wallet-backend
+          npm install --production
+          zip -r ../backend.zip .
+
+      - name: Deploy to Lambda
+        run: |
+          aws lambda update-function-code \
+            --function-name wallet-backend-api \
+            --zip-file fileb://backend.zip
