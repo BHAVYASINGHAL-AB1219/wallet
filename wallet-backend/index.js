@@ -26,12 +26,7 @@ app.use("/expenses", ExpensesRouter)
 app.use("/category", CategoryRouter)
 app.use("/incomes", IncomeRouter);
 app.use("/budget", BudgetRouter)
-async function main() {
-    await mongoose.connect(process.env.MONGO_URL);
-    module.exports.handler = serverless(app);
-    console.log("connection estabilished with db and server started listening on port 3000");
-}
-main()
+mongoose.connect(process.env.MONGO_URL);
 
 cron.schedule('0 0 1 * *', () => {
 
@@ -91,6 +86,8 @@ cron.schedule('0 0 1 * *', () => {
             })
         }
     }
-
+ 
     main()
 })
+
+module.exports.handler = serverless(app);
