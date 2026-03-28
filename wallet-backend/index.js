@@ -1,4 +1,5 @@
 require('dotenv').config()
+const serverless = require("serverless-http")
 const mongoose = require("mongoose");
 const express = require("express");
 const schema = require("./db");
@@ -27,7 +28,7 @@ app.use("/incomes", IncomeRouter);
 app.use("/budget", BudgetRouter)
 async function main() {
     await mongoose.connect(process.env.MONGO_URL);
-    app.listen(3000);
+    module.exports.handler = serverless(app);
     console.log("connection estabilished with db and server started listening on port 3000");
 }
 main()
