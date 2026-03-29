@@ -26,7 +26,7 @@ app.use("/expenses", ExpensesRouter)
 app.use("/category", CategoryRouter)
 app.use("/incomes", IncomeRouter);
 app.use("/budget", BudgetRouter)
-mongoose.connect(process.env.MONGO_URL);
+mongoose.connect(process.env.MONGO_URI);
 
 cron.schedule('0 0 1 * *', () => {
 
