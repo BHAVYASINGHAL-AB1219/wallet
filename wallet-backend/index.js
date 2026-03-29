@@ -31,8 +31,17 @@ const dbconnect = async () => {
 }
 
 app.use(async (req, res, next) => {
-    await dbconnect();
-    next();
+    try {
+        await dbconnect();
+        next();
+    } catch (err) {
+        console.error("DB Connection Error:", err);
+        res.status(500).json({
+            error: "Failed to connect to database",
+            message: err.message,
+            stack: err.stack
+        });
+    }
 })
 
 const { UserRouter } = require("./routes/users")
