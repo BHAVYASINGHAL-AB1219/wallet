@@ -20,7 +20,7 @@ function Budget() {
 
     useEffect(() => {
         const fetchcategories = async () => {
-            const categoriesarr = await axios.get("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.awscategory/allcategories");
+            const categoriesarr = await axios.get("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/category/allcategories");
             //console.log(categoriesarr)
             setCategories(categoriesarr.data.categories);
         }
