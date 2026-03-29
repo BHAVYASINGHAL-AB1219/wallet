@@ -12,22 +12,17 @@ const cron = require('node-cron');
 
 const app = express();
 app.use(cors({
-    domain: ["http://localhost:5173", "http://10.21.208.55:5173", "https://main.d1ndjhxz5ekt2.amplifyapp.com"]
+    origin: ["http://localhost:5173", "http://10.21.208.55:5173", "https://main.d1ndjhxz5ekt2.amplifyapp.com"]
 }))
 app.use(express.json())
 
-let conn = null;
-
 const dbconnect = async () => {
-    if (conn == null) {
-        conn =
-            mongoose.connect(process.env.MONGO_URI, {
-                family: 4
-            }).then(() => mongoose);
-
-        await conn;
+    if (mongoose.connection.readyState >= 1) {
+        return;
     }
-
+    await mongoose.connect(process.env.MONGO_URI, {
+        family: 4
+    });
 }
 
 app.use(async (req, res, next) => {
