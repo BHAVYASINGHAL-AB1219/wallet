@@ -16,6 +16,25 @@ app.use(cors({
 }))
 app.use(express.json())
 
+let conn = null;
+
+const dbconnect = async () => {
+    if (conn == null) {
+        conn =
+            mongoose.connect(process.env.MONGO_URI, {
+                family: 4
+            }).then(() => mongoose);
+
+        await conn;
+    }
+
+}
+
+app.use(async (req, res, next) => {
+    await dbconnect();
+    next();
+})
+
 const { UserRouter } = require("./routes/users")
 const { ExpensesRouter } = require("./routes/expenses");
 const { CategoryRouter } = require("./routes/category");
@@ -27,13 +46,7 @@ app.use("/category", CategoryRouter)
 app.use("/incomes", IncomeRouter);
 app.use("/budget", BudgetRouter)
 
-const dbconnect = async () => {
-    await mongoose.connect(process.env.MONGO_URI, {
-        family: 4
-    });
-}
 
-dbconnect();
 
 cron.schedule('0 0 1 * *', () => {
 
