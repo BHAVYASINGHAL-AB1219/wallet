@@ -29,6 +29,7 @@ app.use("/budget", BudgetRouter)
 
 const dbconnect = async () => {
     console.log("Checking Env:", process.env.MONGO_URI ? "EXISTS" : "STILL MISSING");
+    console.log("All env keys:", Object.keys(process.env));
     await mongoose.connect(process.env.MONGO_URI);
 }
 
