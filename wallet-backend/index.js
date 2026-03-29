@@ -9,7 +9,7 @@ const cron = require('node-cron');
 
 
 
- 
+
 const app = express();
 app.use(cors({
     domain: ["http://localhost:5173", "http://10.21.208.55:5173", "https://main.d1ndjhxz5ekt2.amplifyapp.com/signin"]
@@ -27,8 +27,9 @@ app.use("/category", CategoryRouter)
 app.use("/incomes", IncomeRouter);
 app.use("/budget", BudgetRouter)
 
-const dbconnect = async() => {
- await mongoose.connect(process.env.MONGO_URI);
+const dbconnect = async () => {
+    console.log("Checking Env:", process.env.MONGO_URI ? "EXISTS" : "STILL MISSING");
+    await mongoose.connect(process.env.MONGO_URI);
 }
 
 dbconnect();
@@ -91,7 +92,7 @@ cron.schedule('0 0 1 * *', () => {
             })
         }
     }
- 
+
     main()
 })
 
