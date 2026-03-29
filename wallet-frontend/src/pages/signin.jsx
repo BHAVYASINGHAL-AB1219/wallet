@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {useNavigate,Link} from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
 import './Signin.css';
 
@@ -11,12 +11,12 @@ function SignIn() {
 
 
     const navigate = useNavigate();
-    
+
     const handleSignIn = async (e) => {
         e.preventDefault();
-        setError(''); 
+        setError('');
         try {
-            const response = await axios.post("http://10.21.208.55:3000/users/signin", {
+            const response = await axios.post("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/ /users/signin", {
                 email: email,
                 password: password
             });
@@ -36,9 +36,9 @@ function SignIn() {
     };
 
     const handleSignUpClick = () => {
-        
+
         console.log('Sign Up button clicked - Redirect to Signup page');
-        
+
     };
 
     return (

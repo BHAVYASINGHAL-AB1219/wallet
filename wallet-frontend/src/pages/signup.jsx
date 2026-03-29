@@ -1,30 +1,31 @@
-import React , {useState} from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios'
 import './Signup.css';
 
 function Signup() {
-    const [email,setEmail] = useState('');
+    const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
     const [success, setSuccess] = useState('')
 
     const navigate = useNavigate();
-    const handlesignup = async(e) => {
+    const handlesignup = async (e) => {
         e.preventDefault();
         setError('');
         setSuccess('');
 
-        try {const response = await axios.post("http://10.21.208.55:3000/users/signup", {
-            name: name,
-            email: email,
-            password: password
-        })
-        console.log(response);
-        setSuccess(response.data.message)
-        navigate("/signin")
-    }catch (e){
+        try {
+            const response = await axios.post("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/ /users/signup", {
+                name: name,
+                email: email,
+                password: password
+            })
+            console.log(response);
+            setSuccess(response.data.message)
+            navigate("/signin")
+        } catch (e) {
             console.log(e)
             console.log(e.response.data.message);
             setError(e.response.data.message)
@@ -36,7 +37,7 @@ function Signup() {
         <div className="signup-container">
             <div className="signup-card">
                 <h2 className="signup-title">Sign Up</h2>
-                <form onSubmit = {handlesignup}>
+                <form onSubmit={handlesignup}>
                     <div className="form-group">
                         <label htmlFor="name" className="form-label">Name</label>
                         <input
@@ -44,7 +45,7 @@ function Signup() {
                             className="form-control"
                             id="name"
                             placeholder="Your Name"
-                            value = {name}
+                            value={name}
                             onChange={(e) => setName(e.target.value)}
                             required
                         />
@@ -56,7 +57,7 @@ function Signup() {
                             className="form-control"
                             id="username"
                             placeholder="Username"
-                            value = {email}
+                            value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
                         />
@@ -68,13 +69,13 @@ function Signup() {
                             className="form-control"
                             id="password"
                             placeholder="Password"
-                            value = {password}
+                            value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
                         />
                     </div>
                     {error && <div className="error-message" style={{ color: 'red', marginTop: '10px' }}>{error}</div>}
-                    {success && <div className="success-message" style={{ color: 'green', marginTop: '10px', marginBottom:'5px' }}>{success}</div>}
+                    {success && <div className="success-message" style={{ color: 'green', marginTop: '10px', marginBottom: '5px' }}>{success}</div>}
                     <button type="submit" className="btn-primary">Sign Up</button>
                 </form>
                 <div className="signin-section">

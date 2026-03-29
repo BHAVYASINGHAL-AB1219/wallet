@@ -20,7 +20,7 @@ function Budget() {
 
     useEffect(() => {
         const fetchcategories = async () => {
-            const categoriesarr = await axios.get("http://10.21.208.55:3000/category/allcategories");
+            const categoriesarr = await axios.get("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/ /category/allcategories");
             //console.log(categoriesarr)
             setCategories(categoriesarr.data.categories);
         }
@@ -34,7 +34,7 @@ function Budget() {
         const fetchcategorywisebudget = async () => {
             let tempresults = [];
             for (let i = 0; i < categories.length; i++) {
-                let amount = await axios.post("http://10.21.208.55:3000/budget/catbudget", {
+                let amount = await axios.post("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/ /budget/catbudget", {
                     category: categories[i]
                 }, {
                     headers: {
@@ -52,7 +52,7 @@ function Budget() {
             setBudgetobj(tempresults);
         }
         fetchcategorywisebudget();
-    }, [categories,editrow])
+    }, [categories, editrow])
 
     const editbudget = async (id) => {
         setEditrowId(id);
@@ -60,36 +60,38 @@ function Budget() {
 
     const savebudget = async (categoryname) => {
 
-        const iscategoryexists = await axios.post("http://10.21.208.55:3000/budget/categoryexists", {
+        const iscategoryexists = await axios.post("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/ /budget/categoryexists", {
             categoryName: categoryname
-        },{
+        }, {
             headers: {
                 token: token
             }
         })
         console.log(iscategoryexists);
 
-        if(iscategoryexists.data.categoryexists === 1){
-            const repsonse = await axios.put("http://10.21.208.55:3000/budget/editbudget", {
-            category: categoryname,
-            amount: catamount
-        },{
-            headers: {
-                token: token
-            }
-        })
-        }else{
-            const response = await axios.post("http://10.21.208.55:3000/budget/setbudget", {
-                budget: {category: categoryname,
-                amount: catamount}
-            },{
-                headers:{
+        if (iscategoryexists.data.categoryexists === 1) {
+            const repsonse = await axios.put("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/ /budget/editbudget", {
+                category: categoryname,
+                amount: catamount
+            }, {
+                headers: {
+                    token: token
+                }
+            })
+        } else {
+            const response = await axios.post("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/ /budget/setbudget", {
+                budget: {
+                    category: categoryname,
+                    amount: catamount
+                }
+            }, {
+                headers: {
                     token: token
                 }
             })
         }
 
-        
+
 
         setEditrowId(null);
     }
@@ -109,18 +111,18 @@ function Budget() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {budgetobj.map((budget) =>  (<tr key={budget.id}>
+                                {budgetobj.map((budget) => (<tr key={budget.id}>
                                     <td className='category-col'>{budget.categoryName}</td>
                                     {editrow === budget.id && (<td className='amount-col'>
                                         <input className='input-amount'
-                                            type = "number"
-                                            name = "budgetamount"
-                                            value = {catamount}
+                                            type="number"
+                                            name="budgetamount"
+                                            value={catamount}
                                             onChange={(e) => setCatamount(e.target.value)}
                                         />
                                     </td>)}
-                                    {editrow !== budget.id &&(<td className='amount-col'>{budget.amount}</td>)}
-                                    {editrow === budget.id && (<td className='edit-col'><button className='save-button' onClick={() => {savebudget(budget.categoryName)}}>Save</button></td>)}
+                                    {editrow !== budget.id && (<td className='amount-col'>{budget.amount}</td>)}
+                                    {editrow === budget.id && (<td className='edit-col'><button className='save-button' onClick={() => { savebudget(budget.categoryName) }}>Save</button></td>)}
                                     {editrow !== budget.id && (<td className='edit-col'><button className='edit-button' onClick={() => editbudget(budget.id)}>Edit</button></td>)}
                                 </tr>))}
                             </tbody>

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios'
 import { useNavigate, useLocation } from 'react-router-dom';
 import Header from '../components/Header';
@@ -9,7 +9,7 @@ function ViewDetails() {
     const navigate = useNavigate();
     const location = useLocation();
     const date = new Date();
-    const monthname = date.toLocaleString('default', {month: 'long'});
+    const monthname = date.toLocaleString('default', { month: 'long' });
 
     // Mock data for design purposes - user will implement logic later
     const categoryName = location.state?.category?.name || "Category Name";
@@ -29,9 +29,9 @@ function ViewDetails() {
 
     const fetchallexpenses = async (e) => {
         const token = localStorage.getItem('token');
-        const allexpenses = await axios.post("http://10.21.208.55:3000/expenses/catexpenses", {
+        const allexpenses = await axios.post("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/ /expenses/catexpenses", {
             category: categoryName
-        },{
+        }, {
             headers: {
                 token: token
             }
@@ -44,12 +44,12 @@ function ViewDetails() {
 
     }
     useEffect(() => {
-        if(categoryName !== "Category Name"){
-        fetchallexpenses();
-    }
-    },[categoryName])
-    
-    
+        if (categoryName !== "Category Name") {
+            fetchallexpenses();
+        }
+    }, [categoryName])
+
+
     return (
         <div className="view-details-layout">
             <Header />
