@@ -16,7 +16,7 @@ function SignIn() {
         e.preventDefault();
         setError('');
         try {
-            const response = await axios.post("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/ /users/signin", {
+            const response = await axios.post("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/users/signin", {
                 email: email,
                 password: password
             });

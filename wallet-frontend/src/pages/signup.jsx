@@ -17,7 +17,7 @@ function Signup() {
         setSuccess('');
 
         try {
-            const response = await axios.post("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/ /users/signup", {
+            const response = await axios.post("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/users/signup", {
                 name: name,
                 email: email,
                 password: password

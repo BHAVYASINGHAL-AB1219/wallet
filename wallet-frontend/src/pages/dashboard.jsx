@@ -26,7 +26,7 @@ function Dashboard() {
 
     const addexpense = async (e) => {
         const token = localStorage.getItem('token');
-        const response = await axios.post("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/ /expenses/addexpense", {
+        const response = await axios.post("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/expenses/addexpense", {
             category: expcategory,
             amount: expamount,
             description: expdescription
@@ -43,7 +43,7 @@ function Dashboard() {
         const fetchingtotalincome = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const allincomes = await axios.get("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/ /incomes/allincomes", {
+                const allincomes = await axios.get("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/incomes/allincomes", {
                     headers: {
                         token: token
                     }
@@ -60,7 +60,7 @@ function Dashboard() {
         const fetchingtotalbudget = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const totalbudget = await axios.get("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/ /budget/totalbudget", {
+                const totalbudget = await axios.get("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/budget/totalbudget", {
                     headers: {
                         token: token
                     }
@@ -77,7 +77,7 @@ function Dashboard() {
             try {
                 const token = localStorage.getItem('token');
                 //console.log(token)
-                const totalexpense = await axios.get("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/ /expenses/allexpenses", {
+                const totalexpense = await axios.get("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/expenses/allexpenses", {
                     headers: {
                         token: token
                     }
@@ -91,7 +91,7 @@ function Dashboard() {
 
         const fetchingcategorywisedata = async () => {
             const token = localStorage.getItem('token');
-            const allcategories = await axios.get("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/ /category/allcategories");
+            const allcategories = await axios.get("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/category/allcategories");
             let allcategoryobj = [];
             let categorynames = allcategories.data.categories;
             console.log(categorynames);
@@ -104,7 +104,7 @@ function Dashboard() {
 
                 try {
                     ss
-                    let categoryexpense = await axios.post("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/ /expenses/catexpenses", {
+                    let categoryexpense = await axios.post("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/expenses/catexpenses", {
                         category: categorynames[i]
                     }, {
                         headers: {
@@ -117,7 +117,7 @@ function Dashboard() {
                 }
 
                 try {
-                    let catbudget = await axios.post("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/ /budget/catbudget", {
+                    let catbudget = await axios.post("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/budget/catbudget", {
                         category: categorynames[i]
                     }, {
                         headers: {
@@ -139,7 +139,7 @@ function Dashboard() {
         const fetchingdailylimit = async () => {
             const token = localStorage.getItem('token');
 
-            const dailyexpenselimit = await axios.post("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/ /expenses/dailyexpense", {}, {
+            const dailyexpenselimit = await axios.post("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/expenses/dailyexpense", {}, {
                 headers: {
                     token: token
                 }
@@ -161,7 +161,7 @@ function Dashboard() {
 
     const addincomme = async (e) => {
         const token = localStorage.getItem('token');
-        const response = await axios.post("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/ /incomes/income", {
+        const response = await axios.post("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/incomes/income", {
             amount: incAmount,
             description: incDescription
         }, {

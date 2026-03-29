@@ -29,7 +29,7 @@ function ViewDetails() {
 
     const fetchallexpenses = async (e) => {
         const token = localStorage.getItem('token');
-        const allexpenses = await axios.post("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/ /expenses/catexpenses", {
+        const allexpenses = await axios.post("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/expenses/catexpenses", {
             category: categoryName
         }, {
             headers: {
