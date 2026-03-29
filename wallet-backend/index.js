@@ -28,7 +28,9 @@ app.use("/incomes", IncomeRouter);
 app.use("/budget", BudgetRouter)
 
 const dbconnect = async () => {
-    await mongoose.connect(process.env.MONGO_URI);
+    await mongoose.connect(process.env.MONGO_URI, {
+        family: 4
+    });
 }
 
 dbconnect();
