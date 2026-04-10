@@ -27,8 +27,8 @@ function Signup() {
             navigate("/signin")
         } catch (e) {
             console.log(e)
-            console.log(e.response.data.message);
-            setError(e.response.data.message)
+            console.log(e.response[0].message);
+            setError(e.response[0].message);
         }
     }
 
