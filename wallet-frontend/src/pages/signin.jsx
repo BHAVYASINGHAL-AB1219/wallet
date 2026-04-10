@@ -28,7 +28,7 @@ function SignIn() {
         } catch (err) {
             console.error(err.response.data.message);
             if (err.response && err.response.data) {
-                setError(err.response.data.error[0].message);
+                setError(err.response.data[0].message);
             } else {
                 setError("An error occurred during sign in.");
             }
