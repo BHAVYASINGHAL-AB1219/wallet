@@ -29,7 +29,11 @@ function SignIn() {
             console.error(err.response.data.message);
             if (err.response && err.response.data) {
                 setError(err.response.data[0].message);
-            } else {
+            }
+            else if(err.response.data.message){
+                setError(err.response.data.message);
+            }
+            else {
                 setError("An error occurred during sign in.");
             }
         }
