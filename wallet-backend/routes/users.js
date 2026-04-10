@@ -15,7 +15,7 @@ UserRouter.post("/signup",async function(req,res){
 
     const signupschema = z.object({
         email: z.string().email(),
-        password: z.string().refine((val) => /[a-z]/.test(val) && /[A-Z]/.test(val), {
+        password: z.string().min(6).refine((val) => /[a-z]/.test(val) && /[A-Z]/.test(val), {
             message: "password should contain altleat one uppercase and one lowercase letter"
         }),
         name: z.string()
@@ -35,7 +35,7 @@ UserRouter.post("/signup",async function(req,res){
         })
     }else{
         res.status(403).json({
-            error: isdatasafe.error
+            error: isdatasafe.error.issues
         })
     }
 })
