@@ -97,3 +97,26 @@
     color: white;
     cursor: pointer;
 }
+
+@media (max-width: 768px) {
+    .main-budget {
+        padding: 1rem;
+    }
+    .budget-space {
+        padding: 1rem;
+    }
+    .budget-table th, .budget-table td {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.85rem;
+    }
+    .amount-col {
+        font-size: 20px;
+    }
+    .input-amount {
+        width: 50px;
+    }
+    .edit-button, .save-button {
+        width: 70px;
+        font-size: 0.8rem;
+    }
+}

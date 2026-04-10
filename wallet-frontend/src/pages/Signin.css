@@ -87,3 +87,13 @@
 .btn-link:hover {
   text-decoration: underline;
 }
+
+@media (max-width: 480px) {
+  .signin-container {
+    padding: 1rem;
+  }
+  .signin-card {
+    padding: 1.5rem;
+    max-width: 100%;
+  }
+}

@@ -151,3 +151,29 @@
     font-weight: 700;
     color: #dc3545;
 }
+
+@media (max-width: 768px) {
+    .view-details-content {
+        padding: 1rem;
+    }
+    .details-summary-cards {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .details-card {
+        padding: 1rem;
+    }
+    .transactions-list-container {
+        padding: 1rem;
+    }
+    .transactions-table th, .transactions-table td {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.85rem;
+    }
+    .date-col, .amount-col {
+        width: 25%;
+    }
+    .desc-col {
+        width: 50%;
+    }
+}

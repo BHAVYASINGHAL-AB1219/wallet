@@ -83,3 +83,13 @@
 .signin-section a:hover {
   text-decoration: underline;
 }
+
+@media (max-width: 480px) {
+  .signup-container {
+    padding: 1rem;
+  }
+  .signup-card {
+    padding: 1.5rem;
+    max-width: 100%;
+  }
+}
