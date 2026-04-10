@@ -341,23 +341,32 @@
 @media (max-width: 768px) {
     .dashboard-content {
         padding: 1rem;
+        width: 100%;
     }
     .summary-section {
         flex-direction: column;
+        gap: 1rem;
     }
     .summary-card {
+        width: 100%;
         min-width: 100%;
     }
     .category-frame {
         padding: 1rem;
+        width: 100%;
     }
     .dashboard-actions {
         flex-direction: column;
         gap: 1rem;
+        width: 100%;
+    }
+    .btn-action {
+        width: 100%;
+        justify-content: center;
     }
     .category-item {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: stretch;
         gap: 1rem;
     }
     .category-action-btn {
