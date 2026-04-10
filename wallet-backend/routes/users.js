@@ -14,9 +14,9 @@ UserRouter.post("/signup",async function(req,res){
     const { email, password, name} = req.body;
 
     const signupschema = z.object({
-        email: z.string().email(),
+        email: z.string().email("Please enter a valid email address."),
         password: z.string().min(6).refine((val) => /[a-z]/.test(val) && /[A-Z]/.test(val), {
-            message: "password should contain altleat one uppercase and one lowercase letter"
+            message: "Password must be at least 6 characters long and include both uppercase and lowercase letters."
         }),
         name: z.string()
     })
