@@ -27,13 +27,10 @@ function SignIn() {
             navigate('/dashboard')
         } catch (err) {
             //console.error(err.response.data.message);
-            if (err.response && err.response.data) {
+            if (err.response && err.response.data && !err.response.data.message) {
                 setError(err.response.data[0].message);
             }
             else if(err.response.data.message){
-                console.log(err.response.message);
-                console.log(err.response.data.message);
-                console.log("1");
                 setError(err.response.data.message);
             }
             else {
