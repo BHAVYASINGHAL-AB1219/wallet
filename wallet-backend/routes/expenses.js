@@ -185,8 +185,11 @@ ExpensesRouter.post("/dailyexpense", UserMiddleware, async function(req,res){
     console.log(daysremaining);
     
     let dailylimit = (remainingamount/daysremaining);
+    console.log(dailylimit);
     dailylimit -= todaytotalexpense;
+    console.log(dailylimit);
     dailylimit = dailylimit.toFixed(2);
+    console.log(dailylimit);
 
     res.status(200).json({
         dailylimit: dailylimit
