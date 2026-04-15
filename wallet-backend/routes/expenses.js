@@ -149,7 +149,7 @@ ExpensesRouter.post("/dailyexpense", UserMiddleware, async function(req,res){
 
     let allmonthlyexpenses = allexpenses.filter(expense => new Date(expense.createdAt).getMonth() == currentdate.getMonth());
     allmonthlyexpenses = allmonthlyexpenses.filter(expense => new Date(expense.createdAt).getDate() != currentdate.getDate());
-    const todaysexpense = allexpenses.filter(expense => new Date(expense.createdAt).getDate() == currentdate.getDate());
+    const todaysexpense = allexpenses.filter(expense => (new Date(expense.createdAt).getDate() == currentdate.getDate()) && (new Date(expense.createdAt).getMonth() == currentdate.getMonth()) && (new Date(expense.createdAt).getFullYear() == currentdate.getFullYear()));
 
     let todaytotalexpense = 0;
     for(let i = 0; i < todaysexpense.length; i++){
