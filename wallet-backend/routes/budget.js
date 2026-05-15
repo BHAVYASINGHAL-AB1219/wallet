@@ -12,6 +12,8 @@ BudgetRouter.post("/setbudget", UserMiddleware, async function (req, res) {
         userId: UserId
     })
 
+    console.log(maxbudgetobj);
+
     maxbudgetobj = maxbudgetobj.filter(income => (new Date(income.createdAt).getMonth() == currdate.getMonth() && new Date(income.createdAt).getFullYear == currdate.getFullYear));
 
     console.log(maxbudgetobj);
@@ -45,6 +47,8 @@ BudgetRouter.post("/setbudget", UserMiddleware, async function (req, res) {
         for(let i = 0; i < budgetarramount.length; i++){
             budgetarramount += budgetarr.amount;
         }
+
+        console.log(budgetarramount);
         //console.log(budgetarr)
         const categoryexists = await budgetarr.filter(val => val.categoryId.toString() === categoryId.toString())
         //console.log(categoryexists)
