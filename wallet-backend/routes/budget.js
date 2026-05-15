@@ -9,7 +9,7 @@ BudgetRouter.post("/setbudget", UserMiddleware, async function (req, res) {
     const currdate = new Date();
     let maxbudget = 0;
     let maxbudgetobj = await IncomesModel.find({
-        userId: UserId
+        userId: UserId.id
     })
 
     console.log(maxbudgetobj);
