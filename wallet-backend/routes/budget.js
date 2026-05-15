@@ -2,7 +2,7 @@ const { Router } = require("express");
 
 const BudgetRouter = Router();
 const { UserMiddleware } = require("../middlewares/user")
-const { BudgetModel, categoriesModel } = require("../db")
+const { BudgetModel, categoriesModel, IncomesModel } = require("../db")
 
 BudgetRouter.post("/setbudget", UserMiddleware, async function (req, res) {
     const UserId = req.UserId;
