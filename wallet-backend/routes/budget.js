@@ -6,6 +6,22 @@ const { BudgetModel, categoriesModel } = require("../db")
 
 BudgetRouter.post("/setbudget", UserMiddleware, async function (req, res) {
     const UserId = req.UserId;
+    const currdate = new Date();
+    let maxbudget = 0;
+    let maxbudgetobj = await IncomesModel.find({
+        userId: UserId
+    })
+
+    maxbudgetobj = maxbudgetobj.filter(income => (new Date(income.createdAt).getMonth() == currdate.getMonth() && new Date(income.createdAt).getFullYear == currdate.getFullYear));
+
+    console.log(maxbudgetobj);
+
+    for(let i = 0; i < maxbudgetobj.length; i++){
+        maxbudget += maxbudgetobj[i].amount;
+    }
+    
+    console.log(maxbudget);
+
     // console.log(UserId)
     let flag = 2;
 
@@ -25,11 +41,20 @@ BudgetRouter.post("/setbudget", UserMiddleware, async function (req, res) {
 
     if (budgetexists) {
         const budgetarr = budgetexists.budget;
+        let budgetarramount = 0;
+        for(let i = 0; i < budgetarramount.length; i++){
+            budgetarramount += budgetarr.amount;
+        }
         //console.log(budgetarr)
         const categoryexists = await budgetarr.filter(val => val.categoryId.toString() === categoryId.toString())
         //console.log(categoryexists)
         if (categoryexists.length == 0) {
-            budgetarr.push({
+            budgetarramount += amount;
+
+            if(budgetarramount > maxbudget){
+                flag = 3;
+            }else{
+                budgetarr.push({
                 categoryId: categoryId,
                 amount: amount
             })
@@ -41,9 +66,14 @@ BudgetRouter.post("/setbudget", UserMiddleware, async function (req, res) {
                 createdAt: new Date()
             })
             flag = 0;
+            } 
         }
     } else {
-        const newbudget = await BudgetModel.create({
+
+        if(amount > maxbudget){
+            flag = 3;
+        }else{
+            const newbudget = await BudgetModel.create({
             budget: {
                 categoryId: categoryId,
                 amount: amount
@@ -52,6 +82,7 @@ BudgetRouter.post("/setbudget", UserMiddleware, async function (req, res) {
             createdAt: new Date()
         })
         flag = 1;
+        }
     }
     if (flag == 0) {
         res.status(200).json({
@@ -59,7 +90,9 @@ BudgetRouter.post("/setbudget", UserMiddleware, async function (req, res) {
         })
     } else if (flag == 1) {
         res.status(200).send(`New Budget has been created for user with UserId: ${UserId.id}`)
-    } else {
+    } else if (flag == 3){
+        res.status(403).send(`Budget is getting over Income ${maxbudget}`)
+    }else {
         res.status(403).send(`Error Occured`)
     }
 
