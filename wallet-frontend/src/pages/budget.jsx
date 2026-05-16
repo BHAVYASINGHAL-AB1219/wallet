@@ -84,7 +84,7 @@ function Budget() {
                 alert(`${e.response.data}`);
             }
         } else {
-            const response = await axios.post("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/budget/setbudget", {
+            try{const response = await axios.post("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/budget/setbudget", {
                 budget: {
                     category: categoryname,
                     amount: catamount
@@ -93,7 +93,9 @@ function Budget() {
                 headers: {
                     token: token
                 }
-            })
+            })}catch(e){
+                alert(`${e.response.message}`);
+            }
         }
 
 
