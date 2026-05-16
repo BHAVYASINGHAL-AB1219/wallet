@@ -80,8 +80,8 @@ function Budget() {
                     }
                 })
             } catch (e) {
-                console.log(e);
-                alert(`${e}`);
+                console.log(e.response.data);
+                alert(`${e.response.data}`);
             }
         } else {
             const response = await axios.post("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/budget/setbudget", {
