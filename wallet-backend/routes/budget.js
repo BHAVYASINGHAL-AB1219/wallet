@@ -152,7 +152,7 @@ BudgetRouter.put("/editbudget", UserMiddleware, async function (req, res) {
     }
     
 
-    if (updatedbudget.matchedCount == 1) {
+    if (!overbudget && updatedbudget.matchedCount == 1) {
         res.status(200).json({
             message: `Budget of category: ${category} updated`
         })
