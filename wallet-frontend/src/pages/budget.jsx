@@ -70,14 +70,17 @@ function Budget() {
         console.log(iscategoryexists);
 
         if (iscategoryexists.data.categoryexists === 1) {
-            try{const repsonse = await axios.put("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/budget/editbudget", {
-                category: categoryname,
-                amount: catamount
-            }, {
-                headers: {
-                    token: token
-                }
-            })}catch(e){
+            try {
+                const repsonse = await axios.put("https://n5igchtqxaczere6rgsl2odzuq0mvrvl.lambda-url.eu-north-1.on.aws/budget/editbudget", {
+                    category: categoryname,
+                    amount: catamount
+                }, {
+                    headers: {
+                        token: token
+                    }
+                })
+            } catch (e) {
+                console.log(e);
                 alert(`${e}`);
             }
         } else {
