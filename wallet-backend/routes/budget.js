@@ -142,8 +142,10 @@ BudgetRouter.put("/editbudget", UserMiddleware, async function (req, res) {
         }
     }
 
+    const updatedbudget;
+
     if(!isoverbudget){
-        const updatedbudget = await BudgetModel.updateOne({
+        updatedbudget = await BudgetModel.updateOne({
         UserId: UserId.id
     }, {
         budget: budgetarr,
