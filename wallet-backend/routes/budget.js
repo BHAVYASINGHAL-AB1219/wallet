@@ -6,23 +6,7 @@ const { BudgetModel, categoriesModel, IncomesModel } = require("../db")
 
 BudgetRouter.post("/setbudget", UserMiddleware, async function (req, res) {
     const UserId = req.UserId;
-    const currdate = new Date();
-    let maxbudget = 0;
-    let maxbudgetobj = await IncomesModel.find({
-        UserId: UserId.id
-    })
 
-    console.log(maxbudgetobj);
-
-    maxbudgetobj = maxbudgetobj.filter(income => (new Date(income.createdAt).getMonth() == currdate.getMonth() && new Date(income.createdAt).getFullYear == currdate.getFullYear));
-
-    console.log(maxbudgetobj);
-
-    for(let i = 0; i < maxbudgetobj.length; i++){
-        maxbudget += maxbudgetobj[i].amount;
-    }
-    
-    console.log(maxbudget);
 
     // console.log(UserId)
     let flag = 2;
@@ -44,7 +28,7 @@ BudgetRouter.post("/setbudget", UserMiddleware, async function (req, res) {
     if (budgetexists) {
         const budgetarr = budgetexists.budget;
         let budgetarramount = 0;
-        for(let i = 0; i < budgetarramount.length; i++){
+        for (let i = 0; i < budgetarramount.length; i++) {
             budgetarramount += budgetarr.amount;
         }
 
@@ -55,37 +39,37 @@ BudgetRouter.post("/setbudget", UserMiddleware, async function (req, res) {
         if (categoryexists.length == 0) {
             budgetarramount += amount;
 
-            if(budgetarramount > maxbudget){
+            if (budgetarramount > maxbudget) {
                 flag = 3;
-            }else{
+            } else {
                 budgetarr.push({
-                categoryId: categoryId,
-                amount: amount
-            })
+                    categoryId: categoryId,
+                    amount: amount
+                })
 
-            const updatedbudget = await BudgetModel.updateOne({
-                UserId: UserId.id
-            }, {
-                budget: budgetarr,
-                createdAt: new Date()
-            })
-            flag = 0;
-            } 
+                const updatedbudget = await BudgetModel.updateOne({
+                    UserId: UserId.id
+                }, {
+                    budget: budgetarr,
+                    createdAt: new Date()
+                })
+                flag = 0;
+            }
         }
     } else {
 
-        if(amount > maxbudget){
+        if (amount > maxbudget) {
             flag = 3;
-        }else{
+        } else {
             const newbudget = await BudgetModel.create({
-            budget: {
-                categoryId: categoryId,
-                amount: amount
-            },
-            UserId: UserId.id,
-            createdAt: new Date()
-        })
-        flag = 1;
+                budget: {
+                    categoryId: categoryId,
+                    amount: amount
+                },
+                UserId: UserId.id,
+                createdAt: new Date()
+            })
+            flag = 1;
         }
     }
     if (flag == 0) {
@@ -94,9 +78,9 @@ BudgetRouter.post("/setbudget", UserMiddleware, async function (req, res) {
         })
     } else if (flag == 1) {
         res.status(200).send(`New Budget has been created for user with UserId: ${UserId.id}`)
-    } else if (flag == 3){
+    } else if (flag == 3) {
         res.status(403).send(`Budget is getting over Income ${maxbudget}`)
-    }else {
+    } else {
         res.status(403).send(`Error Occured`)
     }
 
@@ -104,6 +88,25 @@ BudgetRouter.post("/setbudget", UserMiddleware, async function (req, res) {
 
 BudgetRouter.put("/editbudget", UserMiddleware, async function (req, res) {
     const UserId = req.UserId;
+    const currdate = new Date();
+    let maxbudget = 0;
+    let maxbudgetobj = await IncomesModel.find({
+        UserId: UserId.id
+    })
+
+    console.log(maxbudgetobj);
+
+    maxbudgetobj = maxbudgetobj.filter(income => (new Date(income.createdAt).getMonth() == currdate.getMonth() && new Date(income.createdAt).getFullYear == currdate.getFullYear));
+
+    console.log(maxbudgetobj);
+
+    for (let i = 0; i < maxbudgetobj.length; i++) {
+        maxbudget += maxbudgetobj[i].amount;
+    }
+
+    console.log(maxbudget);
+    let isoverbudget = false;
+    let totalbudgetamount = 0;
 
     const { category, amount } = req.body;
 
@@ -121,21 +124,40 @@ BudgetRouter.put("/editbudget", UserMiddleware, async function (req, res) {
 
     for (let i = 0; i < budgetarr.length; i++) {
         if (budgetarr[i].categoryId.toString() == categoryid.toString()) {
-            budgetarr[i].amount = amount;
+            totalbudgetamount += amount;
+        } else {
+            totalbudgetamount += budgetarr[i].amount;
         }
     }
 
-    const updatedbudget = await BudgetModel.updateOne({
+    if (totalbudgetamount > maxbudget) {
+        isoverbudget = true;
+    }
+
+    if (!isoverbudget) {
+        for (let i = 0; i < budgetarr.length; i++) {
+            if (budgetarr[i].categoryId.toString() == categoryid.toString()) {
+                budgetarr[i].amount = amount;
+            }
+        }
+    }
+
+    if(!isoverbudget){
+        const updatedbudget = await BudgetModel.updateOne({
         UserId: UserId.id
     }, {
         budget: budgetarr,
         createdAt: new Date()
     })
+    }
+    
 
     if (updatedbudget.matchedCount == 1) {
         res.status(200).json({
             message: `Budget of category: ${category} updated`
         })
+    } else if(isoverbudget){
+        res.status(403).send(`OverBudget excedding Income: ${maxbudget}`);
     } else {
         res.status(404).send(`Some Error Occured, Budget not Upddated`)
     }
@@ -218,20 +240,20 @@ BudgetRouter.post("/categoryexists", UserMiddleware, async function (req, res) {
 
     if (!budgetobj) {
         res.status(200).json({
-        categoryexists: categoryexists
-    })
-    }else{
+            categoryexists: categoryexists
+        })
+    } else {
         budgetarr = budgetobj.budget;
 
         const filteredcategory = budgetarr.filter((budget) => budget.categoryId.toString() === categoryId.toString());
 
-        if(filteredcategory.length > 0){
+        if (filteredcategory.length > 0) {
             categoryexists = 1;
         }
     }
 
 
-    
+
     res.status(200).json({
         categoryexists: categoryexists
     })
